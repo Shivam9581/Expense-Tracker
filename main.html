@@ -1,0 +1,504 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ledger — Simple Expense Tracker</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,600;0,9..144,700;1,9..144,500&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+
+  /* =====================================================================
+     All the styling lives here. The JavaScript further down doesn't
+     know or care about any of this — it only sets text and adds/removes
+     HTML elements. Feel free to change colors/fonts here without
+     touching the script at the bottom.
+     ===================================================================== */
+
+  /* ===== Page background and base text ===== */
+
+  body {
+    font-family: 'Inter', Arial, sans-serif;
+    background-color: #F6F1E7;   /* warm paper color */
+    color: #1E2A33;              /* dark ink color */
+    margin: 0;
+    padding: 30px 20px;
+  }
+
+  .container {
+    max-width: 700px;
+    margin: 0 auto;
+    background-color: #FBF8F1;   /* slightly lighter "raised paper" */
+    padding: 30px;
+    border-radius: 10px;
+    border: 1px solid #E4DAC4;
+  }
+
+  /* ===== Page title ===== */
+
+  h1 {
+    text-align: center;
+    font-family: 'Fraunces', serif;
+    font-weight: 700;
+    font-size: 2rem;
+    margin-top: 0;
+    margin-bottom: 28px;
+    color: #1E2A33;
+  }
+
+  h2 {
+    font-family: 'Fraunces', serif;
+    font-weight: 600;
+    font-size: 1.1rem;
+    color: #1E2A33;
+    border-bottom: 2px solid #1E2A33;
+    padding-bottom: 8px;
+    margin-bottom: 16px;
+  }
+
+  /* ===== The summary boxes (Income / Expenses / Balance) ===== */
+
+  .summary {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 28px;
+  }
+
+  .summary-box {
+    flex: 1;
+    text-align: center;
+    padding: 16px 10px;
+    border-radius: 8px;
+    color: white;
+  }
+
+  .income-box {
+    background-color: #2F6B4F; /* green */
+  }
+
+  .expense-box {
+    background-color: #9C3B3B; /* red */
+  }
+
+  .balance-box {
+    background-color: #1E2A33; /* ink/navy */
+  }
+
+  .summary-box h3 {
+    margin: 0;
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    font-weight: 600;
+    opacity: 0.85;
+  }
+
+  .summary-box p {
+    margin: 8px 0 0 0;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 1.3rem;
+    font-weight: 600;
+  }
+
+  /* ===== The form for adding a new entry ===== */
+
+  .form-section {
+    background-color: #F6F1E7;
+    border: 1px solid #E4DAC4;
+    padding: 20px;
+    border-radius: 8px;
+    margin-bottom: 28px;
+  }
+
+  .form-row {
+    margin-bottom: 14px;
+  }
+
+  .form-row label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: 600;
+    font-size: 0.78rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: #5B6670;
+  }
+
+  .form-row input,
+  .form-row select {
+    width: 100%;
+    padding: 9px 10px;
+    box-sizing: border-box;
+    border: 1px solid #D8CFBC;
+    border-radius: 5px;
+    font-family: 'Inter', sans-serif;
+    font-size: 0.95rem;
+    background-color: #FBF8F1;
+    color: #1E2A33;
+  }
+
+  .form-row input:focus,
+  .form-row select:focus {
+    outline: 2px solid #C1551A;
+    outline-offset: 1px;
+    border-color: #C1551A;
+  }
+
+  button {
+    background-color: #1E2A33;
+    color: white;
+    border: none;
+    padding: 11px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    font-weight: 600;
+    font-family: 'Inter', sans-serif;
+  }
+
+  button:hover {
+    background-color: #C1551A;
+  }
+
+  /* ===== The list of entries ===== */
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+
+  th {
+    text-align: left;
+    padding: 8px;
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: #5B6670;
+    border-bottom: 2px solid #1E2A33;
+  }
+
+  td {
+    text-align: left;
+    padding: 12px 8px;
+    border-bottom: 1px solid #E4DAC4;
+    font-size: 0.92rem;
+  }
+
+  tr:hover td {
+    background-color: #F6F1E7;
+  }
+
+  .amount-income {
+    color: #2F6B4F;
+    font-weight: 600;
+    font-family: 'JetBrains Mono', monospace;
+  }
+
+  .amount-expense {
+    color: #9C3B3B;
+    font-weight: 600;
+    font-family: 'JetBrains Mono', monospace;
+  }
+
+  .delete-button {
+    background-color: transparent;
+    color: #9C3B3B;
+    border: 1px solid #D8CFBC;
+    padding: 5px 12px;
+    font-size: 0.78rem;
+    font-weight: 600;
+  }
+
+  .delete-button:hover {
+    background-color: #9C3B3B;
+    color: white;
+    border-color: #9C3B3B;
+  }
+
+  .empty-message {
+    text-align: center;
+    color: #5B6670;
+    padding: 30px 20px;
+    font-style: italic;
+  }
+
+</style>
+</head>
+<body>
+
+<div class="container">
+
+  <h1>Ledger — My Expense Tracker</h1>
+
+  <!-- ===== Summary boxes ===== -->
+  <div class="summary">
+    <div class="summary-box income-box">
+      <h3>Total Income</h3>
+      <p id="totalIncomeText">$0.00</p>
+    </div>
+    <div class="summary-box expense-box">
+      <h3>Total Expenses</h3>
+      <p id="totalExpenseText">$0.00</p>
+    </div>
+    <div class="summary-box balance-box">
+      <h3>Balance</h3>
+      <p id="balanceText">$0.00</p>
+    </div>
+  </div>
+
+  <!-- ===== Form to add a new entry ===== -->
+  <div class="form-section">
+    <h2>Add a new entry</h2>
+
+    <div class="form-row">
+      <label for="typeSelect">Type</label>
+      <select id="typeSelect">
+        <option value="expense">Expense</option>
+        <option value="income">Income</option>
+      </select>
+    </div>
+
+    <div class="form-row">
+      <label for="descriptionInput">Description</label>
+      <input type="text" id="descriptionInput" placeholder="e.g. Groceries">
+    </div>
+
+    <div class="form-row">
+      <label for="amountInput">Amount ($)</label>
+      <input type="number" id="amountInput" placeholder="e.g. 25.00" step="0.01">
+    </div>
+
+    <div class="form-row">
+      <label for="categorySelect">Category</label>
+      <select id="categorySelect">
+        <option>Food</option>
+        <option>Transport</option>
+        <option>Housing</option>
+        <option>Utilities</option>
+        <option>Entertainment</option>
+        <option>Salary</option>
+        <option>Other</option>
+      </select>
+    </div>
+
+    <button onclick="addEntry()">Add Entry</button>
+  </div>
+
+  <!-- ===== List of all entries ===== -->
+  <h2>All Entries</h2>
+  <table>
+    <thead>
+      <tr>
+        <th>Description</th>
+        <th>Category</th>
+        <th>Amount</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody id="entriesTableBody">
+      <!-- Rows get added here automatically by JavaScript -->
+    </tbody>
+  </table>
+  <div id="emptyMessage" class="empty-message">No entries yet. Add one above!</div>
+
+</div>
+
+<script>
+
+  /* =====================================================================
+     SIMPLE EXPENSE TRACKER — JavaScript
+
+     How this program works, in plain English:
+
+       1. We keep a list (an array) called `entries`. Every expense or
+          income the user adds gets stored in this list as an object.
+
+       2. Every time the list changes (something added or deleted),
+          we call updateDisplay(), which:
+            a) recalculates the totals (income, expenses, balance)
+            b) redraws the table of entries on the page
+
+       3. That's it! No frameworks, no fancy tools — just a list,
+          a few functions, and updating the page when the list changes.
+     ===================================================================== */
+
+
+  // This array holds every entry. Each entry is an object with:
+  //   type        -> "income" or "expense"
+  //   description -> text the user typed in
+  //   amount      -> a number
+  //   category    -> text from the dropdown
+  var entries = [];
+
+
+  // ---------------------------------------------------------------
+  // STEP 1: Add a new entry
+  // This function runs when the user clicks the "Add Entry" button.
+  // ---------------------------------------------------------------
+  function addEntry() {
+
+    // Read the current values out of the form fields.
+    var type = document.getElementById("typeSelect").value;
+    var description = document.getElementById("descriptionInput").value;
+    var amountText = document.getElementById("amountInput").value;
+    var category = document.getElementById("categorySelect").value;
+
+    // Convert the amount from text ("25.00") into an actual number (25.00).
+    var amount = parseFloat(amountText);
+
+    // Make sure the user actually typed something useful.
+    // If the description is empty, or the amount isn't a valid
+    // positive number, stop here and show an alert.
+    if (description.trim() === "") {
+      alert("Please enter a description.");
+      return;
+    }
+
+    if (isNaN(amount) || amount <= 0) {
+      alert("Please enter a valid amount greater than 0.");
+      return;
+    }
+
+    // Build a new entry object and add it to our list.
+    var newEntry = {
+      type: type,
+      description: description,
+      amount: amount,
+      category: category
+    };
+
+    entries.push(newEntry);
+
+    // Clear the form so it's ready for the next entry.
+    document.getElementById("descriptionInput").value = "";
+    document.getElementById("amountInput").value = "";
+
+    // Redraw the totals and the table now that the list has changed.
+    updateDisplay();
+  }
+
+
+  // ---------------------------------------------------------------
+  // STEP 2: Delete an entry
+  // Each row in the table has a Delete button. When clicked, it
+  // calls this function and tells it which entry to remove, using
+  // that entry's position (index) in the array.
+  // ---------------------------------------------------------------
+  function deleteEntry(indexToDelete) {
+
+    // splice(position, howManyToRemove) removes items from an array.
+    // Here we remove exactly 1 item, at the given position.
+    entries.splice(indexToDelete, 1);
+
+    updateDisplay();
+  }
+
+
+  // ---------------------------------------------------------------
+  // STEP 3: Calculate totals
+  // Goes through every entry one by one and adds up the income
+  // and expenses separately, using a simple "for" loop.
+  // ---------------------------------------------------------------
+  function calculateTotals() {
+
+    var totalIncome = 0;
+    var totalExpense = 0;
+
+    for (var i = 0; i < entries.length; i++) {
+      var entry = entries[i];
+
+      if (entry.type === "income") {
+        totalIncome = totalIncome + entry.amount;
+      } else {
+        totalExpense = totalExpense + entry.amount;
+      }
+    }
+
+    // Return both numbers as an object, so the caller can use both.
+    return {
+      income: totalIncome,
+      expense: totalExpense
+    };
+  }
+
+
+  // ---------------------------------------------------------------
+  // STEP 4: Turn a number into a dollar string
+  // Example: formatMoney(25) returns "$25.00"
+  // ---------------------------------------------------------------
+  function formatMoney(number) {
+    return "$" + number.toFixed(2);
+  }
+
+
+  // ---------------------------------------------------------------
+  // STEP 5: Redraw everything on the page
+  // This is the function we call any time the data changes.
+  // It does two jobs: update the summary boxes, and rebuild the table.
+  // ---------------------------------------------------------------
+  function updateDisplay() {
+
+    // ----- Job 1: Update the summary boxes at the top -----
+    var totals = calculateTotals();
+    var balance = totals.income - totals.expense;
+
+    document.getElementById("totalIncomeText").textContent = formatMoney(totals.income);
+    document.getElementById("totalExpenseText").textContent = formatMoney(totals.expense);
+    document.getElementById("balanceText").textContent = formatMoney(balance);
+
+    // ----- Job 2: Rebuild the table of entries -----
+    var tableBody = document.getElementById("entriesTableBody");
+    var emptyMessage = document.getElementById("emptyMessage");
+
+    // First, clear out whatever rows are currently in the table.
+    tableBody.innerHTML = "";
+
+    // If there are no entries, show the "no entries yet" message
+    // and skip the rest of this function.
+    if (entries.length === 0) {
+      emptyMessage.style.display = "block";
+      return;
+    } else {
+      emptyMessage.style.display = "none";
+    }
+
+    // Go through every entry and build one table row for each.
+    for (var i = 0; i < entries.length; i++) {
+      var entry = entries[i];
+
+      // Create a new <tr> (table row) element.
+      var row = document.createElement("tr");
+
+      // Decide the +/- sign and the CSS class based on the type.
+      var sign = "+";
+      var amountClass = "amount-income";
+      if (entry.type === "expense") {
+        sign = "-";
+        amountClass = "amount-expense";
+      }
+
+      // Fill the row with HTML. We use the loop number "i" so the
+      // Delete button knows exactly which entry to remove.
+      row.innerHTML =
+        "<td>" + entry.description + "</td>" +
+        "<td>" + entry.category + "</td>" +
+        "<td class='" + amountClass + "'>" + sign + formatMoney(entry.amount) + "</td>" +
+        "<td><button class='delete-button' onclick='deleteEntry(" + i + ")'>Delete</button></td>";
+
+      // Add the finished row into the table.
+      tableBody.appendChild(row);
+    }
+  }
+
+
+  // ---------------------------------------------------------------
+  // STEP 6: Run once when the page first loads
+  // This draws the empty state (totals at $0, "no entries" message)
+  // before the user has added anything.
+  // ---------------------------------------------------------------
+  updateDisplay();
+
+</script>
+
+</body>
+</html>
