@@ -1,0 +1,204 @@
+ body {
+    font-family: 'Inter', Arial, sans-serif;
+    background-color: #F6F1E7;   /* warm paper color */
+    color: #1E2A33;              /* dark ink color */
+    margin: 0;
+    padding: 30px 20px;
+  }
+
+  .container {
+    max-width: 700px;
+    margin: 0 auto;
+    background-color: #FBF8F1;   /* slightly lighter "raised paper" */
+    padding: 30px;
+    border-radius: 10px;
+    border: 1px solid #E4DAC4;
+  }
+
+  /* ===== Page title ===== */
+
+  h1 {
+    text-align: center;
+    font-family: 'Fraunces', serif;
+    font-weight: 700;
+    font-size: 2rem;
+    margin-top: 0;
+    margin-bottom: 28px;
+    color: #1E2A33;
+  }
+
+  h2 {
+    font-family: 'Fraunces', serif;
+    font-weight: 600;
+    font-size: 1.1rem;
+    color: #1E2A33;
+    border-bottom: 2px solid #1E2A33;
+    padding-bottom: 8px;
+    margin-bottom: 16px;
+  }
+
+  /* ===== The summary boxes (Income / Expenses / Balance) ===== */
+
+  .summary {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 28px;
+  }
+
+  .summary-box {
+    flex: 1;
+    text-align: center;
+    padding: 16px 10px;
+    border-radius: 8px;
+    color: white;
+  }
+
+  .income-box {
+    background-color: #2F6B4F; /* green */
+  }
+
+  .expense-box {
+    background-color: #9C3B3B; /* red */
+  }
+
+  .balance-box {
+    background-color: #1E2A33; /* ink/navy */
+  }
+
+  .summary-box h3 {
+    margin: 0;
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    font-weight: 600;
+    opacity: 0.85;
+  }
+
+  .summary-box p {
+    margin: 8px 0 0 0;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 1.3rem;
+    font-weight: 600;
+  }
+
+  /* ===== The form for adding a new entry ===== */
+
+  .form-section {
+    background-color: #F6F1E7;
+    border: 1px solid #E4DAC4;
+    padding: 20px;
+    border-radius: 8px;
+    margin-bottom: 28px;
+  }
+
+  .form-row {
+    margin-bottom: 14px;
+  }
+
+  .form-row label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: 600;
+    font-size: 0.78rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: #5B6670;
+  }
+
+  .form-row input,
+  .form-row select {
+    width: 100%;
+    padding: 9px 10px;
+    box-sizing: border-box;
+    border: 1px solid #D8CFBC;
+    border-radius: 5px;
+    font-family: 'Inter', sans-serif;
+    font-size: 0.95rem;
+    background-color: #FBF8F1;
+    color: #1E2A33;
+  }
+
+  .form-row input:focus,
+  .form-row select:focus {
+    outline: 2px solid #C1551A;
+    outline-offset: 1px;
+    border-color: #C1551A;
+  }
+
+  button {
+    background-color: #1E2A33;
+    color: white;
+    border: none;
+    padding: 11px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    font-weight: 600;
+    font-family: 'Inter', sans-serif;
+  }
+
+  button:hover {
+    background-color: #C1551A;
+  }
+
+  /* ===== The list of entries ===== */
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+
+  th {
+    text-align: left;
+    padding: 8px;
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: #5B6670;
+    border-bottom: 2px solid #1E2A33;
+  }
+
+  td {
+    text-align: left;
+    padding: 12px 8px;
+    border-bottom: 1px solid #E4DAC4;
+    font-size: 0.92rem;
+  }
+
+  tr:hover td {
+    background-color: #F6F1E7;
+  }
+
+  .amount-income {
+    color: #2F6B4F;
+    font-weight: 600;
+    font-family: 'JetBrains Mono', monospace;
+  }
+
+  .amount-expense {
+    color: #9C3B3B;
+    font-weight: 600;
+    font-family: 'JetBrains Mono', monospace;
+  }
+
+  .delete-button {
+    background-color: transparent;
+    color: #9C3B3B;
+    border: 1px solid #D8CFBC;
+    padding: 5px 12px;
+    font-size: 0.78rem;
+    font-weight: 600;
+  }
+
+  .delete-button:hover {
+    background-color: #9C3B3B;
+    color: white;
+    border-color: #9C3B3B;
+  }
+
+  .empty-message {
+    text-align: center;
+    color: #5B6670;
+    padding: 30px 20px;
+    font-style: italic;
+  }
